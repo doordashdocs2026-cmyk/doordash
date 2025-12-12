@@ -1,0 +1,58 @@
+<mjml>
+  <mj-head>
+    <mj-title>Bienvenido</mj-title>
+
+    <!-- Estilos responsivos -->
+    <mj-style inline="inline">
+      .hero-title {
+        font-size: 38px;
+        line-height: 1.2;
+      }
+
+      @media only screen and (max-width:480px) {
+        .hero-title {
+          font-size: 30px !important; /* fuente más pequeña */
+          padding: 20px !important;    /* padding uniforme */
+        }
+      }
+    </mj-style>
+  </mj-head>
+
+  <mj-body>
+    <mj-hero
+      mode="fluid-height"
+      background-url="https://i.ibb.co/qMddPKyP/Captura-de-pantalla-2025-11-30-160228.png"
+      background-width="1200px"
+      background-height="600px"
+      padding="0"
+    >
+      <mj-column>
+        <mj-text
+          align="center"
+          font-weight="bold"
+          color="#ff0000"
+          css-class="hero-title"
+        >
+          ¡Gracias por unirte, {{fullName}}!
+        </mj-text>
+      </mj-column>
+    </mj-hero>
+
+    <mj-section padding="20px 0">
+      <mj-column>
+        <mj-button background-color="#ff0000" color="white" href="www.doordash.com">
+          Ir a la plataforma
+        </mj-button>
+      </mj-column>
+    </mj-section>
+
+    <mj-section padding="0">
+      <mj-column>
+        <mj-image src="https://i.ibb.co/Y7Fmh4S2/Captura-de-pantalla-2025-11-30-160308.png" />
+        <mj-image src="https://i.ibb.co/jk9bhB2H/Captura-de-pantalla-2025-11-30-160343.png" />
+        <mj-image src="https://i.ibb.co/qLHKXXBM/Captura-de-pantalla-2025-11-30-160409.png" />
+        <mj-image src="https://i.ibb.co/BVFWVwmx/Captura-de-pantalla-2025-11-30-160434.png" />
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

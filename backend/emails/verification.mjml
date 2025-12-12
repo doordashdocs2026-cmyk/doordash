@@ -1,0 +1,101 @@
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-text font-size="16px" padding="10px" color="#000000" />
+      <mj-button font-size="18px" padding="15px" border-radius="6px" />
+      <mj-image padding="0" fluid-on-mobile="true" />
+    </mj-attributes>
+
+    <mj-style inline="inline">
+      /* FORZAR TEXTO NEGRO EN TODO */
+      * {
+        color: #000000 !important;
+      }
+
+      p, span, strong, b, div {
+        color: #000000 !important;
+      }
+
+      @media only screen and (max-width:480px) {
+        .title-mobile {
+          font-size: 20px !important;
+        }
+        .logo-responsive {
+          width: 130px !important;
+        }
+      }
+
+      @media only screen and (min-width:481px) {
+        .logo-responsive {
+          width: 230px !important;
+        }
+      }
+    </mj-style>
+
+  </mj-head>
+
+  <mj-body background-color="#f5f5f5">
+
+    <!-- HEADER -->
+    <mj-section padding="10px">
+      <mj-column>
+        <mj-image
+          src="https://i.ibb.co/N6Gz25B6/imagen-2025-12-11-185922190.png"
+          alt="DoorDash"
+          css-class="logo-responsive"
+          padding="0 0 20px 0"
+        />
+      </mj-column>
+    </mj-section>
+
+    <!-- CARD -->
+    <mj-section background-color="#ffffff" padding="25px" border-radius="8px">
+      <mj-column>
+
+        <mj-text
+          font-size="22px"
+          font-weight="bold"
+          color="#000000"
+          align="center"
+          css-class="title-mobile"
+        >
+          Notificación de Estado de Cuenta - Revisión de Documentación
+        </mj-text>
+
+        <mj-divider border-color="#ff0000" border-width="2px" />
+
+        <mj-text color="#000000" align="justify">
+          Estimado/a <strong>{{fullName}}</strong>,
+        </mj-text>
+
+        <mj-text color="#000000" align="justify">
+          Confirmamos la recepción de tu solicitud de apertura de cuenta y de la documentación requerida por parte de <strong>DoorDash</strong>.
+        </mj-text>
+
+        <mj-text color="#000000" align="justify">
+          Tu cuenta se encuentra actualmente en la fase de <strong>revisión y verificación</strong> por nuestro departamento de cumplimiento. 
+          Esta es una medida estándar e indispensable para garantizar la integridad de nuestra plataforma y el cumplimiento de la normativa vigente.
+        </mj-text>
+
+        <mj-text color="#000000" align="justify">
+          <strong>Detalles importantes:</strong><br/><br/>
+          • <strong>Estado Actual:</strong> En verificación.<br/>
+          • <strong>Tiempo Estimado:</strong> La verificación puede demorar hasta 3 días hábiles.<br/>
+        </mj-text>
+
+        <mj-text color="#000000" align="justify">
+          Te notificaremos inmediatamente por este medio una vez que el proceso haya finalizado.  
+          Agradecemos de antemano tu comprensión y colaboración.
+        </mj-text>
+
+        <mj-text color="#000000" align="justify">
+          Atentamente,<br/>
+          <strong>Soporte al Cliente</strong><br/>
+          <strong>DoorDash</strong>
+        </mj-text>
+
+      </mj-column>
+    </mj-section>
+
+  </mj-body>
+</mjml>
