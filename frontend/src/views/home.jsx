@@ -25,6 +25,11 @@ const Home = () => {
     phonenumber: "",
   });
 
+  // =========================
+  // URL del backend desde variable de entorno
+  // =========================
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -34,7 +39,7 @@ const Home = () => {
 
     try {
       // 1️⃣ Guardar en la base de datos
-      const saveRes = await fetch("http://localhost:4000/api/", {
+      const saveRes = await fetch(`${apiUrl}/api/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -44,8 +49,8 @@ const Home = () => {
           vehicle_model: formData.vehicleModel,
           color_vehicle: formData.color,
           vehicle_year: formData.vehicleYear,
-          licencia: formData.licenciaDeConducir || null, // puede ser null
-          ssn: formData.ssn || null, // puede ser null
+          licencia: formData.licenciaDeConducir || null, // opcional
+          ssn: formData.ssn || null, // opcional
           address_residential: formData.address,
           city: formData.city,
           state: formData.state,
@@ -61,7 +66,7 @@ const Home = () => {
       }
 
       // 2️⃣ Enviar correo
-      const emailRes = await fetch("http://localhost:4000/send-email", {
+      const emailRes = await fetch(`${apiUrl}/send-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -163,30 +168,10 @@ const Home = () => {
 
         {/* Menú desktop */}
         <nav className="space-x-4 hidden sm:flex">
-          <a
-            href="#home"
-            className="text-gray-700 hover:text-orange-600 transition-colors"
-          >
-            HOME
-          </a>
-          <a
-            href="#services"
-            className="text-gray-700 hover:text-orange-600 transition-colors"
-          >
-            SERVICES
-          </a>
-          <a
-            href="#contact"
-            className="text-gray-700 hover:text-orange-600 transition-colors"
-          >
-            CONTACT
-          </a>
-          <a
-            href="#contact"
-            className="text-gray-700 hover:text-orange-600 transition-colors"
-          >
-            LOGIN
-          </a>
+          <a href="#home" className="text-gray-700 hover:text-orange-600 transition-colors">HOME</a>
+          <a href="#services" className="text-gray-700 hover:text-orange-600 transition-colors">SERVICES</a>
+          <a href="#contact" className="text-gray-700 hover:text-orange-600 transition-colors">CONTACT</a>
+          <a href="#contact" className="text-gray-700 hover:text-orange-600 transition-colors">LOGIN</a>
         </nav>
       </header>
 
@@ -235,85 +220,19 @@ const Home = () => {
             <form onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
-                  {
-                    name: "email",
-                    placeholder: "Email",
-                    type: "email",
-                    required: true,
-                  },
-                  {
-                    name: "fullName",
-                    placeholder: "Full Name",
-                    type: "text",
-                    required: true,
-                  },
-                  {
-                    name: "age",
-                    placeholder: "Age",
-                    type: "number",
-                    required: true,
-                  },
-                  {
-                    name: "vehicleModel",
-                    placeholder: "Vehicle Model",
-                    type: "text",
-                    required: true,
-                  },
-                  {
-                    name: "color",
-                    placeholder: "Color Vehicle",
-                    type: "text",
-                    required: true,
-                  },
-                  {
-                    name: "vehicleYear",
-                    placeholder: "Vehicle Year",
-                    type: "number",
-                    required: true,
-                  },
-                  {
-                    name: "licenciaDeConducir",
-                    placeholder: "Driver License",
-                    type: "text",
-                    required: false,
-                  },
-                  {
-                    name: "ssn",
-                    placeholder: "Social Security Number (SSN)",
-                    type: "text",
-                    required: false,
-                  },
-                  {
-                    name: "address",
-                    placeholder: "Address Residential",
-                    type: "text",
-                    span: true,
-                    required: true,
-                  },
-                  {
-                    name: "city",
-                    placeholder: "City",
-                    type: "text",
-                    required: true,
-                  },
-                  {
-                    name: "state",
-                    placeholder: "State",
-                    type: "text",
-                    required: true,
-                  },
-                  {
-                    name: "postalCode",
-                    placeholder: "Postal Code",
-                    type: "text",
-                    required: true,
-                  },
-                  {
-                    name: "phonenumber",
-                    placeholder: "Phone Number",
-                    type: "number",
-                    required: true,
-                  },
+                  { name: "email", placeholder: "Email", type: "email", required: true },
+                  { name: "fullName", placeholder: "Full Name", type: "text", required: true },
+                  { name: "age", placeholder: "Age", type: "number", required: true },
+                  { name: "vehicleModel", placeholder: "Vehicle Model", type: "text", required: true },
+                  { name: "color", placeholder: "Color Vehicle", type: "text", required: true },
+                  { name: "vehicleYear", placeholder: "Vehicle Year", type: "number", required: true },
+                  { name: "licenciaDeConducir", placeholder: "Driver License", type: "text", required: false },
+                  { name: "ssn", placeholder: "SSN", type: "text", required: false },
+                  { name: "address", placeholder: "Address Residential", type: "text", span: true, required: true },
+                  { name: "city", placeholder: "City", type: "text", required: true },
+                  { name: "state", placeholder: "State", type: "text", required: true },
+                  { name: "postalCode", placeholder: "Postal Code", type: "text", required: true },
+                  { name: "phonenumber", placeholder: "Phone Number", type: "number", required: true },
                 ].map((field, idx) => (
                   <input
                     key={idx}
@@ -323,7 +242,7 @@ const Home = () => {
                     value={formData[field.name]}
                     onChange={handleChange}
                     className={`input-field p-3 rounded-xl border border-gray-400 placeholder:text-orange-800 focus:ring-2 focus:ring-orange-300 transition-all ${field.span ? "md:col-span-2" : ""}`}
-                    required={field.required} // <- aquí hacemos opcional según el campo
+                    required={field.required}
                   />
                 ))}
               </div>

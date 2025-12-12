@@ -19,10 +19,15 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [clientes, setClientes] = useState([]);
 
+  // =========================
+  // URL del backend desde variable de entorno
+  // =========================
+  const apiUrl = process.env.REACT_APP_API_URL;
+
   // Función para traer clientes
   const fetchClientes = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/");
+      const res = await fetch(`${apiUrl}/api/`);
       const data = await res.json();
       setClientes(data);
     } catch (error) {

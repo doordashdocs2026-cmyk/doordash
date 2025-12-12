@@ -10,12 +10,17 @@ export default function Clientes() {
   const [clientes, setClientes] = useState([]);
 
   // =========================
+  // URL del backend desde variable de entorno
+  // =========================
+  const apiUrl = process.env.REACT_APP_API_URL;
+
+  // =========================
   // CARGAR CLIENTES DESDE API
   // =========================
   useEffect(() => {
     const fetchClientes = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/");
+        const res = await fetch(`${apiUrl}/api/`);
         if (!res.ok) throw new Error("Error al obtener clientes");
         const data = await res.json();
         setClientes(data);
@@ -24,7 +29,7 @@ export default function Clientes() {
       }
     };
     fetchClientes();
-  }, []);
+  }, [apiUrl]);
 
   // =========================
   // FUNCIONES CRUD LOCALES
@@ -49,7 +54,7 @@ export default function Clientes() {
   // =========================
   const enviarCorreoBienvenida = async (cliente) => {
     try {
-      const res = await fetch("http://localhost:4000/send-welcome", {
+      const res = await fetch(`${apiUrl}/send-welcome`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -157,13 +162,12 @@ export default function Clientes() {
                       {cliente.status || "Pendiente"}
                     </td>
                     <td className="p-2 md:p-3 flex items-center gap-2">
-                      {/* BOTÓN VERDE: Aceptar + enviar correo de bienvenida */}
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         className="bg-green-500 text-white p-1 rounded-md"
                         onClick={async () => {
-                          aceptarCliente(cliente.id); // Cambia estado a Activo
-                          await enviarCorreoBienvenida(cliente); // Envía correo Welcome
+                          aceptarCliente(cliente.id);
+                          await enviarCorreoBienvenida(cliente);
                         }}
                       >
                         <CheckCircle className="w-4 h-4"/>
