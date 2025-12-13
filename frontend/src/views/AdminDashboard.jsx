@@ -22,7 +22,8 @@ export default function AdminDashboard() {
   // =========================
   // URL del backend desde variable de entorno
   // =========================
-  const apiUrl = process.env.REACT_APP_API_URL;
+ const apiUrl = import.meta.env.VITE_API_URL;
+
 
   // Función para traer clientes
   const fetchClientes = async () => {

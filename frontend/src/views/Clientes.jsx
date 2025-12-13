@@ -12,7 +12,8 @@ export default function Clientes() {
   // =========================
   // URL del backend desde variable de entorno
   // =========================
-  const apiUrl = process.env.REACT_APP_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL;
+
 
   // =========================
   // CARGAR CLIENTES DESDE API
