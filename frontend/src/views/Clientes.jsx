@@ -1,7 +1,7 @@
 // src/views/Clientes.jsx
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Users, CheckCircle, XCircle, Edit, Trash, Menu, BarChart3, Settings, X, Info, Home } from "lucide-react";
+import { Users, CheckCircle, XCircle, Edit, Trash, Menu, BarChart3, Settings, X, Info, Home, Mail } from "lucide-react";
 import img4 from "../assets/imges/na.png";
 
 export default function Clientes() {
@@ -79,6 +79,8 @@ export default function Clientes() {
     { icon: <Home />, label: "Home DoorDash", path: "/home" },
     { icon: <BarChart3 />, label: "Dashboard", path: "/dashboard" },
     { icon: <Users />, label: "Clientes", path: "/clientes" },
+    { icon: <Mail />, label: "emails", path: "/emails" },
+
     { icon: <Settings />, label: "Configuración", path: "/config" },
   ];
 

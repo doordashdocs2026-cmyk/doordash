@@ -5,7 +5,7 @@ import Home from "./views/home";
 import AdminDashboard from "./views/AdminDashboard";
 import Clientes from "./views/Clientes"; // Pantalla de clientes
 import Config from "./views/configuracion"; // Pantalla de configuración (asegúrate que el archivo se llama Config.jsx)
-
+import EnviarCorreo from "./views/email";
 function App() {
   return (
     <Router>
@@ -18,6 +18,8 @@ function App() {
 
         {/* Pantalla de clientes */}
         <Route path="/clientes" element={<Clientes />} />
+
+        <Route path="/emails" element={<EnviarCorreo />} />
 
         {/* Pantalla de configuración */}
         <Route path="/config" element={<Config />} />

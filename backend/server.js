@@ -17,7 +17,11 @@ const app = express();
 // =======================
 // MIDDLEWARES
 // =======================
-app.use(cors());
+app.use(cors({
+  origin: "*", // o tu dominio Netlify
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(express.json());
 app.use(morgan("dev")); // Logger de peticiones
 
@@ -25,7 +29,9 @@ app.use(morgan("dev")); // Logger de peticiones
 // CONFIGURACIÓN GMAIL
 // =======================
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
